@@ -1,6 +1,7 @@
 {
   pkgs,
   lib,
+  python3Packages,
   buildPythonPackage ? pkgs.python3Packages.buildPythonPackage,
   hatchling ? pkgs.python3Packages.hatchling,
   numpy ? pkgs.python3Packages.numpy,
@@ -10,7 +11,7 @@
 let
   project = (lib.importTOML ./pyproject.toml).project;
 in
-buildPythonPackage rec {
+buildPythonPackage (finalAttrs: {
   pname = project.name;
   version = project.version;
 
@@ -43,7 +44,7 @@ buildPythonPackage rec {
   # tests
   doCheck = true;
   nativeCheckInputs = [
-    pkgs.python3Packages.pytestCheckHook
+    python3Packages.pytestCheckHook
     matplotlib
   ];
-}
+})

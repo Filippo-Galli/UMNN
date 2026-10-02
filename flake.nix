@@ -30,7 +30,6 @@
         in
         {
           UMNN = pkgs.callPackage ./. {
-            inherit pkgs;
           };
 
           default = self.packages.${system}.UMNN;
