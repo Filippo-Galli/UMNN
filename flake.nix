@@ -1,0 +1,40 @@
+{
+  description = "UMNN package";
+
+  inputs = {
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+  };
+
+  outputs =
+    inputs@{
+      self,
+      nixpkgs,
+      ...
+    }:
+    let
+      systems = [
+        "x86_64-linux"
+        "aarch64-linux"
+      ];
+
+      forAllSystems = nixpkgs.lib.genAttrs systems;
+
+    in
+    {
+      packages = forAllSystems (
+        system:
+        let
+          pkgs = import nixpkgs {
+            inherit system;
+          };
+        in
+        {
+          UMNN = pkgs.callPackage ./. {
+            inherit pkgs;
+          };
+
+          default = self.packages.${system}.UMNN;
+        }
+      );
+    };
+}
